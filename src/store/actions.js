@@ -8,21 +8,37 @@ export const SUBTRACT = 'SUBTRACT';
 export const FETCH_COUNTER_REQUEST = 'FETCH_COUNTER_REQUEST';
 export const FETCH_COUNTER_SUCCESS = 'FETCH_COUNTER_SUCCESS';
 export const FETCH_COUNTER_ERROR = 'FETCH_COUNTER_ERROR';
+export const SAVE_COUNTER_REQUEST = 'SAVE_COUNTER_REQUEST';
+export const SAVE_COUNTER_SUCCESS = 'SAVE_COUNTER_SUCCESS';
+export const SAVE_COUNTER_ERROR = 'SAVE_COUNTER_ERROR';
+
 
 export const incrementCounter = () => {
-  return {type: INCREMENT};
+  return dispatch => {
+    dispatch({type: INCREMENT});
+    dispatch(saveCounter())
+  }
 };
 
 export const decrementCounter = () => {
-  return {type: DECREMENT};
+  return dispatch => {
+    dispatch({type: DECREMENT});
+    dispatch(saveCounter());
+  };
 };
 
 export const addCounter = amount => {
-  return {type: ADD, amount};
+  return dispatch => {
+    dispatch({type: ADD, amount});
+    dispatch(saveCounter());
+  }
 };
 
 export const subtractCounter = amount => {
-  return {type: SUBTRACT, amount};
+  return dispatch => {
+    dispatch({type: SUBTRACT, amount});
+    dispatch(saveCounter());
+  }
 };
 
 export const fetchCounterRequest = () => {
@@ -37,6 +53,18 @@ export const fetchCounterError = () => {
   return {type: FETCH_COUNTER_ERROR};
 };
 
+export const saveCounterRequest = () => {
+  return {type: SAVE_COUNTER_REQUEST};
+};
+
+export const saveCounterSuccess = () => {
+  return {type: SAVE_COUNTER_SUCCESS};
+};
+
+export const saveCounterError = () => {
+  return {type: SAVE_COUNTER_ERROR};
+};
+
 export const fetchCounter = () => {
   return dispatch => {
     dispatch(fetchCounterRequest());
@@ -48,4 +76,14 @@ export const fetchCounter = () => {
   }
 };
 
-
+export const saveCounter = () => {
+  return (dispatch, getState) => {
+    const counter = getState().counter;
+    dispatch(saveCounterRequest())
+    axios.patch('/.json', {counter: counter}).then(() => {
+      dispatch(saveCounterSuccess())
+    }, error => {
+      dispatch(saveCounterError())
+    });
+  }
+};

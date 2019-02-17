@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import './Counter.css'
-import {addCounter, decrementCounter, fetchCounter, incrementCounter, subtractCounter} from "../../store/actions";
+import {addCounter, decrementCounter, fetchCounter, incrementCounter, subtractCounter, saveCounter} from "../../store/actions";
 import Spinner from "../../components/UI/Spinner/Spinner";
 
 class Counter extends Component {
@@ -13,7 +13,7 @@ class Counter extends Component {
   render() {
     return (
       <div className="Counter">
-        <h1>{this.props.loading ? <Spinner/> : this.props.ctr}</h1>
+        <h1>{this.props.loading ? <Spinner/> : this.props.counter}</h1>
         <button onClick={this.props.increaseCounter}>Increase</button>
         <button onClick={this.props.decreaseCounter}>Decrease</button>
         <button onClick={this.props.addCounter}>Increase by 5</button>
@@ -25,7 +25,7 @@ class Counter extends Component {
 
 const mapStateToProps = state => {
   return {
-    ctr: state.counter,
+    counter: state.counter,
     loading: state.loading
   }
 };
@@ -36,7 +36,8 @@ const mapDispatchToProps = dispatch => {
     decreaseCounter: () => dispatch(decrementCounter()),
     addCounter: () => dispatch(addCounter(5)),
     subtractCounter: () => dispatch(subtractCounter(5)),
-    fetchCounter: () => dispatch(fetchCounter())
+    fetchCounter: () => dispatch(fetchCounter()),
+    saveCounter: () => dispatch(saveCounter())
   }
 };
 
